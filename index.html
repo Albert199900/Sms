@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wsendy SMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        .header {
+            color: #2196F3;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input:focus, textarea:focus {
+            border-color: #2196F3;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2 class="header">Wsendy SMS</h2>
+        
+        <div class="input-group">
+            <label for="phone">Namba ya Mpokeaji</label>
+            <input type="tel" id="phone" placeholder="07XXXXXXXX" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="message">Ujumbe</label>
+            <textarea id="message" rows="5" placeholder="Andika ujumbe wako hapa..." required></textarea>
+        </div>
+        
+        <button onclick="sendSMS()">TUMA SMS</button>
+    </div>
+
+    <script>
+        function sendSMS() {
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+            
+            if(!phone || !message) {
+                alert('Tafadhali jaza namba ya simu na ujumbe!');
+                return;
+            }
+            
+            alert('SMS inatuma kwenda: ' + phone);
+        }
+    </script>
+
+</body>
+</html>
