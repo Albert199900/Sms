@@ -2,32 +2,53 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Wsendy SMS</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary: #007AFF; /* Rangi ya bluu ya kisasa (iOS style) */
+            --bg: #F2F2F7;
+            --surface: #FFFFFF;
+            --text: #1C1C1E;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
             margin: 0;
+            color: var(--text);
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             min-height: 100vh;
         }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 400px;
+        /* Kofia ya App (App Bar) */
+        .app-bar {
+            background-color: var(--primary);
+            color: white;
+            padding: 18px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .header {
-            color: #2196F3;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 24px;
+        .container {
+            padding: 20px;
+            flex: 1;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .card {
+            background: var(--surface);
+            padding: 25px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
         }
         .input-group {
             margin-bottom: 20px;
@@ -35,67 +56,122 @@
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
         }
         input, textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            padding: 15px;
+            border: 1.5px solid #E5E5EA;
+            border-radius: 12px;
             box-sizing: border-box;
             font-size: 16px;
+            background-color: #FAFAFA;
+            transition: 0.3s;
         }
         input:focus, textarea:focus {
-            border-color: #2196F3;
+            border-color: var(--primary);
             outline: none;
+            background-color: var(--surface);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
         }
         button {
             width: 100%;
-            padding: 15px;
-            background-color: #2196F3;
+            padding: 16px;
+            background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
-        button:hover {
-            background-color: #1976D2;
+        button:active {
+            transform: scale(0.97);
+        }
+
+        /* Sehemu ya Kuchangia (Donation) */
+        .donate-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 1px dashed #ccc;
+        }
+        .donate-card i {
+            color: #FF2D55; /* Rangi ya pinki inayoashiria upendo */
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .donate-card p {
+            margin: 0 0 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .donate-card h3 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 24px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2 class="header">Wsendy SMS</h2>
-        
-        <div class="input-group">
-            <label for="phone">Namba ya Mpokeaji</label>
-            <input type="tel" id="phone" placeholder="07XXXXXXXX" required>
+    <div class="app-bar">
+        <i class="fas fa-comment-dots"></i>
+        Wsendy SMS
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="input-group">
+                <label for="phone">Namba ya Mpokeaji</label>
+                <input type="tel" id="phone" placeholder="Mfano: 07XXXXXXXX" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="message">Ujumbe Wako</label>
+                <textarea id="message" rows="5" placeholder="Andika ujumbe wako hapa..." required></textarea>
+            </div>
+            
+            <button onclick="sendSMS()">
+                <i class="fas fa-paper-plane"></i> TUMA SMS
+            </button>
         </div>
-        
-        <div class="input-group">
-            <label for="message">Ujumbe</label>
-            <textarea id="message" rows="5" placeholder="Andika ujumbe wako hapa..." required></textarea>
+
+        <div class="donate-card">
+            <i class="fas fa-hand-holding-heart"></i>
+            <p>Tusaidie kuboresha App hii. Changia kupitia:</p>
+            <h3>0627962633</h3>
         </div>
-        
-        <button onclick="sendSMS()">TUMA SMS</button>
     </div>
 
     <script>
         function sendSMS() {
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
+            const phone = document.getElementById('phone').value.trim();
+            const message = document.getElementById('message').value.trim();
             
             if(!phone || !message) {
                 alert('Tafadhali jaza namba ya simu na ujumbe!');
                 return;
             }
             
-            alert('SMS inatuma kwenda: ' + phone);
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            let smsLink = `sms:${phone}?body=${encodeURIComponent(message)}`;
+            
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                smsLink = `sms:${phone}&body=${encodeURIComponent(message)}`;
+            }
+
+            window.location.href = smsLink;
         }
     </script>
 
