@@ -6,11 +6,9 @@
     <title>Wsendy SMS Pro</title>
     
     <link rel="manifest" href="manifest.json">
-    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* Variables za Rangi (Light Mode Default) */
         :root {
             --primary: #007AFF;
             --bg: #F2F2F7;
@@ -18,9 +16,9 @@
             --text: #1C1C1E;
             --border: #E5E5EA;
             --gray-text: #666666;
+            --danger: #FF3B30;
         }
 
-        /* Dark Mode Theme */
         .dark-theme {
             --bg: #000000;
             --surface: #1C1C1E;
@@ -34,7 +32,7 @@
             background-color: var(--bg);
             margin: 0;
             color: var(--text);
-            transition: background-color 0.3s, color 0.3s;
+            transition: 0.3s;
             overflow-x: hidden;
         }
 
@@ -53,143 +51,93 @@
             top: 0;
             z-index: 100;
         }
-        .app-bar i { cursor: pointer; }
 
-        /* Sidebar Menu */
+        /* Sidebar */
         .sidebar {
             position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
+            top: 0; left: -280px; width: 280px; height: 100%;
             background-color: var(--surface);
             box-shadow: 2px 0 15px rgba(0,0,0,0.2);
-            transition: 0.4s ease;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 200;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
         }
         .sidebar.open { left: 0; }
         .sidebar-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
+            background-color: var(--primary); color: white;
+            padding: 40px 20px; text-align: center;
         }
-        .sidebar-header i { font-size: 40px; margin-bottom: 10px; }
-        .sidebar-menu { padding: 20px 0; flex: 1; }
+        .sidebar-header i { font-size: 50px; margin-bottom: 10px; }
+        .sidebar-menu { padding: 20px 0; flex: 1; overflow-y: auto; }
         .menu-item {
-            padding: 15px 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 16px;
-            color: var(--text);
-            text-decoration: none;
-            cursor: pointer;
-            transition: 0.2s;
+            padding: 15px 25px; display: flex; align-items: center; gap: 15px;
+            font-size: 16px; color: var(--text); cursor: pointer;
         }
-        .menu-item:hover { background-color: rgba(0, 122, 255, 0.1); color: var(--primary); }
-        .close-menu {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
+        .menu-item:active { background-color: rgba(0, 122, 255, 0.1); }
+        .menu-item i { width: 25px; text-align: center; color: var(--primary); }
 
-        /* Overlay (Giza la nyuma ya menu) */
         .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 150;
-            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 150; display: none;
         }
         .overlay.active { display: block; }
 
-        /* Main Content */
-        .container {
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
+        /* Views */
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .view { display: none; }
+        .view.active { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .card {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
+            background: var(--surface); padding: 20px; border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 20px; border: 1px solid var(--border);
         }
+
+        /* Inputs & Buttons */
         .input-group { margin-bottom: 20px; position: relative; }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--gray-text);
-            font-size: 14px;
-        }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--gray-text); font-size: 13px; }
         input, select, textarea {
-            width: 100%;
-            padding: 15px;
-            border: 1.5px solid var(--border);
-            border-radius: 12px;
-            box-sizing: border-box;
-            font-size: 16px;
-            background-color: var(--bg);
-            color: var(--text);
-            transition: 0.3s;
+            width: 100%; padding: 16px; border: 1.5px solid var(--border); border-radius: 14px;
+            box-sizing: border-box; font-size: 16px; background-color: var(--bg); color: var(--text);
         }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-        
-        /* Contact Button inside Input */
         .contact-btn {
-            position: absolute;
-            right: 10px;
-            top: 36px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
+            position: absolute; right: 8px; top: 32px; background: var(--primary); color: white;
+            border: none; border-radius: 10px; padding: 10px 14px; cursor: pointer;
         }
 
         button.btn-primary {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
+            width: 100%; padding: 18px; background-color: var(--primary); color: white;
+            border: none; border-radius: 14px; font-weight: bold; font-size: 16px; cursor: pointer;
             box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
-        button.btn-primary:active { transform: scale(0.97); }
 
-        .donate-card {
-            text-align: center;
-            border: 1px dashed var(--gray-text);
+        /* Message List UI */
+        .msg-item {
+            padding: 15px; border-bottom: 1px solid var(--border); position: relative;
         }
-        .donate-card i { color: #FF2D55; font-size: 28px; margin-bottom: 10px; }
-        .donate-card h3 { color: var(--primary); margin: 5px 0 0 0; }
+        .msg-item:last-child { border-bottom: none; }
+        .msg-item h4 { margin: 0 0 4px 0; font-size: 15px; }
+        .msg-item p { margin: 0; font-size: 14px; line-height: 1.4; opacity: 0.9; }
+        .msg-item .time { font-size: 11px; color: var(--gray-text); margin-top: 6px; display: block; }
+        .delete-btn { color: var(--danger); font-size: 14px; float: right; cursor: pointer; }
+
+        .donate-card { text-align: center; background: linear-gradient(135deg, #007AFF, #00C7FF); color: white; border: none; }
+        .donate-card h3 { margin: 5px 0; font-size: 26px; }
+        .donate-card p { opacity: 0.9; font-size: 13px; }
+
+        /* Secret Vault Overlay */
+        #vault-lock { text-align: center; padding: 40px 20px; }
+        .pin-input {
+            width: 150px; text-align: center; font-size: 24px; letter-spacing: 10px; margin: 20px 0;
+            border-bottom: 3px solid var(--primary); border-top:none; border-left:none; border-right:none; background:none;
+        }
     </style>
 </head>
 <body>
 
     <div class="app-bar">
         <i class="fas fa-bars" onclick="toggleMenu()"></i>
-        <span>Wsendy SMS</span>
+        <span id="app-title">Wsendy SMS</span>
         <i class="fas fa-moon" id="theme-icon" onclick="toggleTheme()"></i>
     </div>
 
@@ -197,121 +145,194 @@
     <div class="sidebar" id="sidebar">
         <i class="fas fa-times close-menu" onclick="toggleMenu()"></i>
         <div class="sidebar-header">
-            <i class="fas fa-user-circle"></i>
-            <h3>Albert199900</h3>
-            <p style="margin:0; font-size: 14px; opacity: 0.8;">Akaunti Huru</p>
+            <i class="fas fa-user-shield"></i>
+            <h3 style="margin:10px 0 5px 0;">Albert Pro</h3>
+            <div style="font-size: 12px; background: rgba(255,255,255,0.2); display: inline-block; padding: 2px 10px; border-radius: 10px;">PRO USER</div>
         </div>
         <div class="sidebar-menu">
-            <div class="menu-item" onclick="toggleMenu()"><i class="fas fa-home"></i> Mwanzo</div>
-            <div class="menu-item" onclick="alert('Ripoti za SMS zinaonekana kwenye App yako ya simu ya ujumbe (Messages).')"><i class="fas fa-chart-bar"></i> Ripoti (Reports)</div>
-            <div class="menu-item" onclick="toggleTheme()"><i class="fas fa-palette"></i> Badili Muonekano</div>
-            <div class="menu-item" onclick="alert('Wsendy SMS V2.0 - Imetengenezwa na Albert')"><i class="fas fa-info-circle"></i> Kuhusu App</div>
+            <div class="menu-item" onclick="switchView('home')"><i class="fas fa-paper-plane"></i> Tuma Ujumbe</div>
+            <div class="menu-item" onclick="switchView('inbox')"><i class="fas fa-inbox"></i> Inbox (Zinazoingia)</div>
+            <div class="menu-item" onclick="switchView('outbox')"><i class="fas fa-history"></i> Outbox (Zilizotumwa)</div>
+            <div class="menu-item" onclick="switchView('hidden')"><i class="fas fa-vault"></i> Secret Vault (Siri)</div>
+            <hr style="opacity: 0.1; margin: 10px 20px;">
+            <div class="menu-item" onclick="toggleTheme()"><i class="fas fa-adjust"></i> Badili Rangi</div>
+            <div class="menu-item" onclick="alert('Wsendy Pro v2.5\nImeundwa na Albert')"><i class="fas fa-info-circle"></i> Kuhusu App</div>
         </div>
     </div>
 
     <div class="container">
-        <div class="card">
-            <div class="input-group">
-                <label>Chagua Mtandao (Sim Card)</label>
-                <select id="sim">
-                    <option>Chagua Kiotomatiki (Default)</option>
-                    <option>SIM 1</option>
-                    <option>SIM 2</option>
-                </select>
-                <small style="color: var(--gray-text); font-size: 12px;">*Uchaguzi kamili utafanyika kwenye simu yako.</small>
+        
+        <div id="view-home" class="view active">
+            <div class="card">
+                <div class="input-group">
+                    <label>Namba ya Mpokeaji</label>
+                    <input type="tel" id="phone" placeholder="07XXXXXXXX">
+                    <button class="contact-btn" onclick="openContacts()"><i class="fas fa-user-plus"></i></button>
+                </div>
+                <div class="input-group">
+                    <label>Ujumbe</label>
+                    <textarea id="message" rows="5" placeholder="Andika ujumbe wako hapa..."></textarea>
+                </div>
+                <button class="btn-primary" onclick="sendSMS()"><i class="fas fa-share"></i> TUMA SASA</button>
             </div>
-
-            <div class="input-group">
-                <label>Namba ya Mpokeaji</label>
-                <input type="tel" id="phone" placeholder="07XXXXXXXX" required>
-                <button class="contact-btn" onclick="openContacts()"><i class="fas fa-address-book"></i></button>
+            <div class="card donate-card">
+                <i class="fas fa-heart" style="font-size: 24px; margin-bottom: 10px;"></i>
+                <p>Changia kuboresha mfumo huu:</p>
+                <h3>0627962633</h3>
             </div>
-            
-            <div class="input-group">
-                <label>Ujumbe Wako</label>
-                <textarea id="message" rows="4" placeholder="Andika ujumbe wako hapa..." required></textarea>
-            </div>
-            
-            <button class="btn-primary" onclick="sendSMS()">
-                <i class="fas fa-paper-plane"></i> TUMA SMS
-            </button>
         </div>
 
-        <div class="card donate-card">
-            <i class="fas fa-hand-holding-heart"></i>
-            <p style="color: var(--gray-text); font-size: 14px; margin: 0;">Tusaidie kuboresha App hii. Changia kupitia:</p>
-            <h3>0627962633</h3>
+        <div id="view-inbox" class="view">
+            <div class="card" style="text-align: center; color: var(--gray-text);">
+                <i class="fas fa-shield-alt" style="font-size: 40px; margin-bottom: 15px;"></i>
+                <p>Kwa mujibu wa sheria za Android, Inbox inasomwa na App ya simu. Hapa unaweza kuhifadhi meseji ulizocopy.</p>
+                <button class="btn-primary" style="margin-top:15px; background: #34C759;" onclick="pasteFromClipboard()">
+                    <i class="fas fa-paste"></i> PASTE NA HIFADHI
+                </button>
+            </div>
+            <div id="inbox-list"></div>
         </div>
+
+        <div id="view-outbox" class="view">
+            <div class="card" id="outbox-list"></div>
+            <button onclick="clearStorage('outbox')" style="background:none; border:none; color:var(--danger); width:100%; font-size:13px; cursor:pointer;">Futa Zote</button>
+        </div>
+
+        <div id="view-hidden" class="view">
+            <div id="vault-lock" class="card">
+                <i class="fas fa-lock" style="font-size: 40px; color: var(--primary);"></i>
+                <h3>Vault ya Siri</h3>
+                <input type="password" id="vault-pin" class="pin-input" placeholder="····" maxlength="4">
+                <button class="btn-primary" onclick="unlockVault()">FUNGUA VAULT</button>
+                <p style="font-size:12px; color:var(--gray-text); margin-top:10px;">Default PIN: 1234</p>
+            </div>
+            
+            <div id="vault-content" style="display:none;">
+                <div class="card">
+                    <h4 style="margin-top:0;">Ficha Ujumbe Mpya</h4>
+                    <input type="text" id="v-title" placeholder="Jina la siri" style="margin-bottom:10px;">
+                    <textarea id="v-msg" rows="3" placeholder="Ujumbe wa siri..."></textarea>
+                    <button class="btn-primary" style="margin-top:10px; background:#34C759;" onclick="saveVault()">HIFADHI SIRI</button>
+                </div>
+                <div id="vault-list"></div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // Kufungua na Kufunga Menu
+        // NAVIGATION & THEME
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // Kubadili Theme (Light/Dark Mode)
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
-            const icon = document.getElementById('theme-icon');
-            if (document.body.classList.contains('dark-theme')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            }
+            const isDark = document.body.classList.contains('dark-theme');
+            document.getElementById('theme-icon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-        // Kufungua Majina (Contact Picker API)
-        async function openContacts() {
-            const supported = ('contacts' in navigator && 'ContactsManager' in window);
-            if (supported) {
-                try {
-                    const props = ['tel'];
-                    const contacts = await navigator.contacts.select(props, {multiple: false});
-                    if(contacts.length > 0) {
-                        document.getElementById('phone').value = contacts[0].tel[0].replace(/\s+/g, '');
-                    }
-                } catch (ex) {
-                    console.log("Mchakato umesitishwa.");
-                }
-            } else {
-                alert("Simu au Kivinjari chako hakiruhusu kuchukua majina moja kwa moja. Tafadhali andika namba.");
+        function switchView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + view).classList.add('active');
+            document.getElementById('app-title').innerText = view.toUpperCase();
+            if(view === 'outbox') renderList('outbox');
+            if(view === 'inbox') renderList('inbox');
+            if(view === 'hidden') {
+                document.getElementById('vault-lock').style.display = 'block';
+                document.getElementById('vault-content').style.display = 'none';
+                document.getElementById('vault-pin').value = '';
             }
+            toggleMenu();
         }
 
-        // Kutuma SMS
+        // SMS LOGIC
         function sendSMS() {
             const phone = document.getElementById('phone').value.trim();
-            const message = document.getElementById('message').value.trim();
-            
-            if(!phone || !message) {
-                alert('Tafadhali jaza namba ya simu na ujumbe!');
-                return;
-            }
-            
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            let smsLink = `sms:${phone}?body=${encodeURIComponent(message)}`;
-            
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                smsLink = `sms:${phone}&body=${encodeURIComponent(message)}`;
-            }
+            const msg = document.getElementById('message').value.trim();
+            if(!phone || !msg) return alert("Jaza namba na ujumbe!");
 
-            window.location.href = smsLink;
+            saveData('outbox', {title: `Kwenda: ${phone}`, msg: msg, time: new Date().toLocaleString()});
+            
+            window.location.href = `sms:${phone}${navigator.userAgent.match(/iPhone/i) ? '&' : '?'}body=${encodeURIComponent(msg)}`;
         }
-    </script>
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('App iko tayari kwa Offline!'))
-                    .catch(err => console.log('Kuna shida: ', err));
+        // STORAGE LOGIC
+        function saveData(key, data) {
+            let items = JSON.parse(localStorage.getItem('wsendy_' + key)) || [];
+            items.unshift(data);
+            localStorage.setItem('wsendy_' + key, JSON.stringify(items));
+        }
+
+        function renderList(key) {
+            const container = document.getElementById(key + '-list');
+            let items = JSON.parse(localStorage.getItem('wsendy_' + key)) || [];
+            container.innerHTML = items.length ? '' : '<p style="text-align:center; padding:20px; color:gray;">Hakuna kumbukumbu.</p>';
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'card msg-item';
+                div.innerHTML = `
+                    <i class="fas fa-trash delete-btn" onclick="deleteItem('${key}', ${index})"></i>
+                    <h4>${item.title}</h4>
+                    <p>${item.msg}</p>
+                    <span class="time">${item.time || ''}</span>
+                `;
+                container.appendChild(div);
             });
         }
-    </script>
 
+        function deleteItem(key, index) {
+            let items = JSON.parse(localStorage.getItem('wsendy_' + key));
+            items.splice(index, 1);
+            localStorage.setItem('wsendy_' + key, JSON.stringify(items));
+            renderList(key);
+        }
+
+        // VAULT LOGIC
+        function unlockVault() {
+            if(document.getElementById('vault-pin').value === '1234') {
+                document.getElementById('vault-lock').style.display = 'none';
+                document.getElementById('vault-content').style.display = 'block';
+                renderList('vault');
+            } else { alert("PIN Sio Sahihi!"); }
+        }
+
+        function saveVault() {
+            const title = document.getElementById('v-title').value;
+            const msg = document.getElementById('v-msg').value;
+            if(!title || !msg) return;
+            saveData('vault', {title: title, msg: msg, time: 'SIRI'});
+            document.getElementById('v-title').value = '';
+            document.getElementById('v-msg').value = '';
+            renderList('vault');
+        }
+
+        // CLIPBOARD DETECTION
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if(text) {
+                    saveData('inbox', {title: 'Kutoka Clipboard', msg: text, time: new Date().toLocaleString()});
+                    renderList('inbox');
+                    alert("Ujumbe umehifadhiwa!");
+                }
+            } catch (err) { alert("Ruhusu App kusoma clipboard kwanza!"); }
+        }
+
+        // CONTACTS
+        async function openContacts() {
+            try {
+                const contacts = await navigator.contacts.select(['tel'], {multiple: false});
+                if(contacts.length) document.getElementById('phone').value = contacts[0].tel[0].replace(/\s+/g, '');
+            } catch (e) { alert("Haikuweza kufungua contacts."); }
+        }
+
+        // PWA SERVICE WORKER
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+        }
+    </script>
 </body>
 </html>
